@@ -1,4 +1,8 @@
 
+type literal =
+    | Pos of string
+    | Neg of string
+
 type sentence =
     | And of sentence * sentence
     | Or of sentence * sentence
@@ -15,9 +19,8 @@ type cnf =
     | Literal of string
 
 
-// Mabye we can use a diffrent type than cnf??
-type clause = Set<cnf>
-
+type DisjunctionSet = Set<literal>
+type ConjunctionSet = Set<DisjunctionSet>
 
 // Helper functions
 let rec prittyPrint (c:cnf) : string =
@@ -27,11 +30,17 @@ let rec prittyPrint (c:cnf) : string =
     | Negation c -> sprintf "¬%s" (prittyPrint c)
     | Literal l -> l
 
-let rec prittyPrintClause (cl:clause) : string =
-    cl
-    |> Set.map prittyPrint
-    |> Set.toList
-    |> String.concat ", "
+let prittyPrintDisjunctionSet ds =
+    ds
+    |> Set.map (function
+        | Pos l -> l
+        | Neg l -> sprintf "¬%s" l)
+    |> String.concat " ∨ "
+
+let rec prittyPrintConjunctionSet (cs:ConjunctionSet) : string =
+    cs
+    |> Set.map prittyPrintDisjunctionSet
+    |> String.concat ", " |> sprintf "{%s}"
 
 
 /// Convert a sentence to CNF
@@ -40,8 +49,8 @@ let rec prittyPrintClause (cl:clause) : string =
 // STEP 1: Convert input sentence to CNF by eliminating implications and biconditionals
 let rec elimination (s:sentence) : cnf =
     match s with
-    | Biconditional (s1, s2) -> Conjunction (elimination (Implies (s1, s2)), elimination (Implies (s2, s1)))
-    | Implies (s1, s2) -> Disjunction (Negation (elimination s1), elimination s2)
+    | Biconditional (a, b) -> Conjunction (elimination (Implies (a, b)), elimination (Implies (b, a))) // A <-> B is equivalent to (A -> B) ∧ (B -> A)
+    | Implies (a, b) -> Disjunction (Negation (elimination a), elimination b) // A -> B is equivalent to ¬A ∨ B
     | And (s1, s2) -> Conjunction (elimination s1, elimination s2)
     | Or (s1, s2) -> Disjunction (elimination s1, elimination s2)
     | Not s -> Negation (elimination s)
@@ -77,16 +86,46 @@ let toCNF (s:sentence) : cnf =
 
 
 // Example form slides
-Biconditional (Term "r", Or (Term "p", Term "s")) |> toCNF |> prittyPrint |> printfn "%s"
-
+Biconditional (Term "r", Or (Term "p", Term "s")) |> toCNF |> printfn "%A"
 
 
 // Resolution
-let rec cnfToClause c : clause = 
+let rec cnfToConjunctionSet c : ConjunctionSet = 
     match c with
-    | Conjunction (c1, c2) -> Set.union (cnfToClause c1) (cnfToClause c2)
-    | x -> Set.singleton x
+    | Conjunction (c1, c2) -> cnfToConjunctionSet c1 |> Set.union <| cnfToConjunctionSet c2
+    | _ -> cnfToDisjunctionSet c |> Set.singleton
+
+and cnfToDisjunctionSet c : DisjunctionSet =
+    match c with
+    | Disjunction (c1, c2) -> cnfToDisjunctionSet c1 |> Set.union <| cnfToDisjunctionSet c2
+    | Negation (Literal l) -> Set.singleton (Neg l)
+    | Literal l -> Set.singleton (Pos l)
+    | _ -> failwith "Invalid CNF format"
 
 
 // test
-Biconditional (Term "r", Or (Term "p", Term "s")) |> toCNF |> cnfToClause |> prittyPrintClause |> printfn "%s"
+Biconditional (Term "r", Or (Term "p", Term "s")) |> toCNF |> cnfToConjunctionSet |> prittyPrintConjunctionSet |> printfn "\ncnfToDisjunctionSet:\n%s"
+
+let negateLiteral (l:literal) : literal =
+    match l with 
+    | Pos s -> Neg s
+    | Neg s -> Pos s
+
+let rec fullResolution (ll:literal list) (cs_acc:ConjunctionSet) =
+    match ll with 
+    | [] -> cs_acc
+    | literal :: literal_tail when Set.exists (fun x -> Set.contains (negateLiteral literal) x) cs_acc ->
+        // Remove both m and ¬m from the clauses
+        Set.map (fun clause -> Set.difference clause (set [negateLiteral literal; literal])) cs_acc |> fullResolution literal_tail
+    | _ :: literal_tail -> fullResolution literal_tail cs_acc
+
+let rec reduceConjunctionSet (cs:ConjunctionSet) =
+    let ll = Set.fold Set.union Set.empty cs |> Set.toList
+    fullResolution ll cs 
+
+let fastPrint x =
+    printfn "fast: %A" x
+    x
+
+// test
+Biconditional (Term "r", Or (Term "p", Term "s")) |> toCNF |> cnfToConjunctionSet |> fastPrint |> reduceConjunctionSet |> fastPrint |> prittyPrintConjunctionSet |> printfn "\nResolution:\n%s"
