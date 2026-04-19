@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<doc>
+<assembly><name>Entailment</name></assembly>
+<members>
+<member name="M:Entailment.PrettyPrint.prittyPrint(Entailment.cnf)">
+<summary>
+ Helper functions for pretty printing CNF and sets of literals ////
+</summary>
+</member>
+<member name="M:Entailment.ToCnf.elimination(Entailment.sentence)">
+<summary>
+ Convert a sentence to CNF
+</summary>
+</member>
+</members>
+</doc>

@@ -1,0 +1,14 @@
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\bin\Debug\net10.0\Entailment.deps.json
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\bin\Debug\net10.0\Entailment.dll
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\bin\Debug\net10.0\Entailment.pdb
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\bin\Debug\net10.0\Entailment.xml
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.fsproj.AssemblyReference.cache
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.AssemblyInfoInputs.cache
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.AssemblyInfo.fs
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.fsproj.CoreCompileInputs.cache
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.sourcelink.json
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.dll
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\refint\Entailment.dll
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.xml
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\Entailment.pdb
+C:\Users\jonas\OneDrive - Danmarks Tekniske Universitet\DTU\Kandidat\Intro AI\belif\src\Entailment\obj\Debug\net10.0\ref\Entailment.dll
