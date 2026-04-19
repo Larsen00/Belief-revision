@@ -1,8 +1,0 @@
-<Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Entailment/Entailment.fsproj" />
-  </Folder>
-  <Folder Name="/tests/">
-    <Project Path="tests/Entailment.Tests/Entailment.Tests.fsproj" />
-  </Folder>
-</Solution>

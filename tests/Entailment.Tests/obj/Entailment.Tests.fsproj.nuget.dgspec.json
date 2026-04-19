@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj": {}
+    "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj": {}
   },
   "projects": {
-    "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj": {
+    "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj",
+        "projectUniqueName": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj",
         "projectName": "Entailment",
-        "projectPath": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj",
+        "projectPath": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj",
         "packagesPath": "C:\\Users\\jonas\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\obj\\",
+        "outputPath": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jonas\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -341,14 +341,14 @@
         }
       }
     },
-    "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj": {
+    "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj",
+        "projectUniqueName": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj",
         "projectName": "Entailment.Tests",
-        "projectPath": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj",
+        "projectPath": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj",
         "packagesPath": "C:\\Users\\jonas\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\obj\\",
+        "outputPath": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\jonas\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -364,8 +364,8 @@
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj": {
-                "projectPath": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj"
+              "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj": {
+                "projectPath": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\src\\Entailment\\Entailment.fsproj"
               }
             }
           }

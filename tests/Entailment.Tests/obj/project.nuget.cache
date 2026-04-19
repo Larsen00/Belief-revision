@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ld+pNucM8nM=",
+  "dgSpecHash": "NTo5VNFr5S4=",
   "success": true,
-  "projectFilePath": "c:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj",
+  "projectFilePath": "C:\\Users\\jonas\\OneDrive - Danmarks Tekniske Universitet\\DTU\\Kandidat\\Intro AI\\belif\\tests\\Entailment.Tests\\Entailment.Tests.fsproj",
   "expectedPackageFiles": [
     "C:\\Users\\jonas\\.nuget\\packages\\coverlet.collector\\6.0.4\\coverlet.collector.6.0.4.nupkg.sha512",
     "C:\\Users\\jonas\\.nuget\\packages\\fsharp.core\\10.0.102\\fsharp.core.10.0.102.nupkg.sha512",

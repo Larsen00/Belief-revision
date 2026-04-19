@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -10,6 +10,7 @@
     <Compile Include="PrettyPrint.fs" />
     <Compile Include="ToCnf.fs" />
     <Compile Include="Resolution.fs" />
+    <Compile Include="Entailment.fs" />
   </ItemGroup>
 
 </Project>
