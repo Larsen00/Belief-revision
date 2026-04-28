@@ -1,3 +1,5 @@
+/// TEST FILE - To test the Entailment module. 
+
 #r "src/Entailment/bin/Debug/net10.0/Entailment.dll"
 
 open Entailment
