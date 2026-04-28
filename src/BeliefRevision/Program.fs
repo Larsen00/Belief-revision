@@ -32,6 +32,7 @@ let private showHelp () =
     printfn ""
     coloredLn ConsoleColor.Cyan "Commands:"
     printfn "  show                 Show the current belief base"
+    printfn "  cnf                  Show the belief base with each formula in CNF"
     printfn "  add <φ>              Expansion:   B + φ"
     printfn "  contract <φ>         Contraction: B ─ φ  (epistemic entrenchment)"
     printfn "  revise <φ>           Revision:    B * φ  (Levi identity)"
@@ -249,6 +250,19 @@ let private processCommand (kb: bbase) (line: string) : bbase =
         coloredLn ConsoleColor.Cyan "  Belief base sorted by epistemic entrenchment (weakest first):"
         printKb sorted
         coloredLn ConsoleColor.DarkGray "  (Ordering: p ≤ q iff {p} ⊨ q)"
+        kb
+
+    | "cnf" ->
+        printfn ""
+        coloredLn ConsoleColor.Cyan "  Belief base in CNF:"
+        if List.isEmpty kb then
+            coloredLn ConsoleColor.DarkGray "  (empty)"
+        else
+            kb |> List.iteri (fun i s ->
+                let cnfStr = s |> toCNF |> prittyPrint
+                colored ConsoleColor.DarkGray (sprintf "  [%d] " (i + 1))
+                colored ConsoleColor.DarkGray (sprintf "%s  →  " (pp s))
+                coloredLn ConsoleColor.White cnfStr)
         kb
 
     | "reset" ->

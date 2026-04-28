@@ -33,6 +33,7 @@ B>
 | Command | Description |
 | --- | --- |
 | `show` | Show the current belief base |
+| `cnf` | Show each formula in the belief base converted to CNF |
 | `add <formula>` | Expand the belief base with a formula |
 | `contract <formula>` | Contract the belief base by a formula |
 | `revise <formula>` | Revise the belief base by a formula |
