@@ -22,7 +22,8 @@ let contraction (k:bbase) p =
     if maximality k p then k else 
     List.filter (fun q -> p <. Or (p, q)) k
 
+let expansion (k:bbase) p =
+    Set.ofList (p :: k) |> Set.toList
 
-
-
-
+let revision (k:bbase) p =
+    expansion (contraction k (Not p)) p

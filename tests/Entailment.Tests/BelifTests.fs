@@ -87,3 +87,38 @@ let ``contraction by tautology leaves belief base unchanged (maximality)`` () =
     // Nothing is less entrenched than a tautology, so maximality holds → k unchanged
     let result = contraction kb taut
     Assert.Equal<sentence list>(kb, result)
+
+// ── expansion ─────────────────────────────────────────────────────────────────
+
+[<Fact>]
+let ``expansion adds a new sentence`` () =
+    let kb = [ Term "p" ]
+    let result = expansion kb (Term "q")
+    Assert.Contains(Term "p", result)
+    Assert.Contains(Term "q", result)
+
+[<Fact>]
+let ``expansion does not duplicate an existing sentence`` () =
+    let kb = [ Term "p" ]
+    let result = expansion kb (Term "p")
+    Assert.Equal<sentence list>([ Term "p" ], result)
+
+// ── revision ──────────────────────────────────────────────────────────────────
+
+[<Fact>]
+let ``revision adds the revising sentence`` () =
+    let kb = [ Term "p"; Term "q" ]
+    let result = revision kb (Not (Term "p"))
+    Assert.Contains(Not (Term "p"), result)
+
+[<Fact>]
+let ``revision by not p removes p from belief base`` () =
+    let kb = [ Term "p"; Term "q" ]
+    let result = revision kb (Not (Term "p"))
+    Assert.DoesNotContain(Term "p", result)
+
+[<Fact>]
+let ``revision by not p keeps unrelated beliefs`` () =
+    let kb = [ Term "p"; Term "q" ]
+    let result = revision kb (Not (Term "p"))
+    Assert.Contains(Term "q", result)
