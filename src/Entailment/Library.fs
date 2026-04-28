@@ -13,6 +13,7 @@ type sentence =
     | Biconditional of sentence * sentence
     | Term of string
 
+
 type cnf =
     | Conjunction of cnf * cnf
     | Disjunction of cnf * cnf
@@ -21,3 +22,4 @@ type cnf =
 
 type DisjunctionSet = Set<literal>
 type ConjunctionSet = Set<DisjunctionSet>
+

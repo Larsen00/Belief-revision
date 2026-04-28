@@ -1,7 +1,9 @@
 [<AutoOpen>]
 module Entailment.Entailment
 
-type entailment = sentence list * sentence
+
+type bbase = sentence list
+type entailment = bbase * sentence
 
 
 let sentencesListTosentence (s :sentence list) : sentence =
@@ -12,7 +14,7 @@ let sentencesListTosentence (s :sentence list) : sentence =
 
 
 // Checks if the knowledge base (kb) entails the sentence alpha using resolution ie. KB |= alpha iff KB ∪ {¬alpha} is unsatisfiable
-let checkEntailment (kb:sentence list, alpha:sentence) : bool =
+let checkEntailment (kb:bbase, alpha:sentence) : bool =
     sentencesListTosentence (Not alpha :: kb) 
     |> toCNF 
     |> cnfToConjunctionSet 
