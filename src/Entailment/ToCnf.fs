@@ -31,7 +31,12 @@ let rec distribute c =
     match c with
     | Disjunction (Conjunction (c2, c3), c1) 
     | Disjunction (c1, Conjunction (c2, c3)) -> Conjunction (distribute (Disjunction (c1, c2)), distribute (Disjunction (c1, c3)))
-    | Disjunction (c1, c2) -> Disjunction (distribute c1, distribute c2)
+    | Disjunction (c1, c2) ->
+        // Recurse first; if either child became a Conjunction, distribute again
+        let result = Disjunction (distribute c1, distribute c2)
+        match result with
+        | Disjunction (Conjunction _, _) | Disjunction (_, Conjunction _) -> distribute result
+        | _ -> result
     | Conjunction (c1, c2) -> Conjunction (distribute c1, distribute c2)
     | Negation c -> Negation (distribute c)
     | Literal l -> Literal l
@@ -40,7 +45,3 @@ let rec distribute c =
 // Combine all steps into a single function
 let toCNF (s:sentence) : cnf =
     s |> elimination |> moveNegations |> distribute
-
-
-// Example form slides
-Biconditional (Term "r", Or (Term "p", Term "s")) |> toCNF |> printfn "%A"

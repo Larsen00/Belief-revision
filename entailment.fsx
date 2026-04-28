@@ -99,6 +99,7 @@ let rec cnfToConjunctionSet c : ConjunctionSet =
     | _ -> cnfToDisjunctionSet c |> Set.singleton
 
 and cnfToDisjunctionSet c : DisjunctionSet =
+    printfn "cnfToDisjunctionSet: %A" c
     match c with
     | Disjunction (c1, c2) -> cnfToDisjunctionSet c1 |> Set.union <| cnfToDisjunctionSet c2
     | Negation (Literal l) -> Set.singleton (Neg l)

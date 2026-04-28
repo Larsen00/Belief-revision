@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<linker>
+  <assembly fullname="BeliefRevision">
+    <resource name="FSharpSignatureData.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpSignatureCompressedData.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpSignatureDataB.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpSignatureCompressedDataB.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpOptimizationData.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpOptimizationCompressedData.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpOptimizationDataB.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpOptimizationCompressedDataB.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpOptimizationInfo.BeliefRevision" action="remove"></resource>
+    <resource name="FSharpSignatureInfo.BeliefRevision" action="remove"></resource>
+  </assembly>
+</linker>
