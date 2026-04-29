@@ -22,4 +22,16 @@ let checkEntailment (kb:bbase, alpha:sentence) : bool =
     |> cnfToConjunctionSet
     |> reduceConjunctionSet
     |> Option.isNone
+
+let (|=) p q = checkEntailment (p, q)
+    
+let isTautology (p: sentence) : bool =
+    [] |= p
+
+let isConsistentSentence (s: sentence) : bool =
+    not (isTautology (Not s))
+
+let isConsistent (bb: bbase) : bool =
+    sentencesListTosentence bb |> isConsistentSentence
+
     

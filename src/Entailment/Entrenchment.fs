@@ -4,8 +4,6 @@ module Entailment.Entrenchment
 type RankedSentence = { Sentence: sentence; Rank: float}
 type Knowledge = RankedSentence list
 
-let (|=) p q = checkEntailment (p, q)
-
 // We define 0 as the most entrenched and negative infinity as the least entrenched
 let maxEntrenchment = 0.0
 
@@ -18,9 +16,6 @@ let extractRankedSentence (k: Knowledge) (p: sentence) : RankedSentence option =
 let KnowledgeToBeliefBase (e: Knowledge) : bbase =
     List.sortBy (fun rs -> rs.Rank) e |> List.map (fun rs -> rs.Sentence)
 
-
-let isTautology (p: sentence) : bool =
-    [] |= p
 
 let isBelieved (e: Knowledge) (p: sentence) : bool =
     KnowledgeToBeliefBase e |= p
@@ -151,3 +146,9 @@ let contraction (e: Knowledge) (s: sentence) : Knowledge =
         e
     else
         List.filter (fun q -> s <. Or(s, q.Sentence)) e
+
+
+// Revision using the Levi identity: B * ϕ = (B - ¬ϕ) + ϕ
+let revision (b:bbase) p =
+    let k = beliefBaseToKnowledge b
+    expansion (contraction k (Not p)) p

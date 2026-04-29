@@ -88,3 +88,57 @@ let ``Vacuity postulate`` () =
         pbtConfig 15,
         Prop.forAll (Arb.fromGen nonEntailingGen) prop
     )
+
+
+//  Consistency: B ∗ ϕ is consistent if ϕ is consistent.
+let consistency (B: bbase) (phi: sentence) =
+    if isConsistentSentence phi then
+        Entrenchment.revision B phi |> KnowledgeToBeliefBase |> isConsistent |> Some
+    else
+        None
+
+let consistencyPBT (b: bbase) (phi: sentence) =
+    match consistency b phi with
+    | Some result -> Prop.classify true "consistent" result
+    | None -> Prop.classify true "inconsistent" true
+
+[<Xunit.Fact>]
+let ``Consistency postulate`` () =
+    Check.One(
+        pbtConfig 10,
+        consistencyPBT
+    )
+
+
+
+// Extensionality: If (ϕ ↔ ψ) ∈ Cn(∅), then B ∗ ϕ = B ∗ ψ.
+// Same as: If [] |= (ϕ <-> ψ), then B * ϕ = B * ψ
+let extensionality (s:BiconditionalTautology) (B: bbase) =
+    let phi, psi = s
+    let s_new = Biconditional (phi, psi)
+    match Entailment.isTautology s_new with
+    | false -> failwith "Generator failed to produce tautology"
+    | true -> 
+        let revisedPhi = Entrenchment.revision B phi |> KnowledgeToBeliefBase
+        let revisedPsi = Entrenchment.revision B psi |> KnowledgeToBeliefBase
+
+        // Extensionality is about equality of the resulting belief sets, not syntax.
+        // Mutual entailment of the revised bases is the relevant check here.
+        let sameClosure =
+            List.forall (fun sentence -> revisedPhi |= sentence) revisedPsi
+            && List.forall (fun sentence -> revisedPsi |= sentence) revisedPhi
+
+        Some sameClosure
+
+let extensionalityPBT (s:BiconditionalTautology) (b: bbase) =
+    match extensionality s b with
+    | Some result -> Prop.classify true "equivalent sentences" result
+    | None -> Prop.classify true "non-equivalent sentences" true
+
+[<Xunit.Fact>]
+let ``Extensionality postulate`` () =
+    Check.One(
+        pbtConfig 10,
+        Prop.forAll (Arb.fromGen equivalentSentencePairGen) extensionalityPBT
+    )
+

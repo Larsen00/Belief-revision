@@ -60,9 +60,38 @@ let nonEntailingGen : Gen<bbase * sentence> =
     Gen.zip beliefBaseGen sentenceGen
     |> Gen.where (fun (b, phi) -> not (b |= phi))
 
+
+type BiconditionalTautology = sentence * sentence
+
+// Generates a (phi, psi) pair where [] |= (phi <-> psi) is guaranteed.
+// The second sentence is built from phi using equivalence-preserving rewrites.
+let equivalentSentencePairGen : Gen<BiconditionalTautology> =
+    gen {
+        let! phi = sentenceGen
+        let! psi =
+            Gen.elements [
+                phi
+                Not (Not phi)
+                And (phi, phi)
+                Or (phi, phi)
+            ]
+
+        return (phi, psi)
+    }
+
 type BeliefBaseGen =
     static member Sentence() : Arbitrary<sentence> =
         Arb.fromGen sentenceGen
 
     static member BBase() : Arbitrary<bbase> =
         Arb.fromGen beliefBaseGen
+
+    static member EquivalentSentencePair() : Arbitrary<BiconditionalTautology> =
+        Arb.fromGen equivalentSentencePairGen
+
+type PostulateGen =
+    static member NonEntailingInput() : Arbitrary<bbase * sentence> =
+        Arb.fromGen nonEntailingGen
+
+    // static member EquivalentSentencePair() : Arbitrary<sentence * sentence> =
+    //     Arb.fromGen equivalentSentencePairGen

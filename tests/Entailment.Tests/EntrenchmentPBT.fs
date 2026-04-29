@@ -21,3 +21,5 @@ let ``BeliefBase to Knowledge to BeliefBase`` () =
             Arbitrary = [ typeof<BeliefBaseGen> ] },
         beliefBaseToKnowledgeToBeliefBase
     )
+
+
