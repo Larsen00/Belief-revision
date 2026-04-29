@@ -46,3 +46,11 @@ let rec prettyPrintSentence (s: sentence) : string =
         sprintf "%s → %s" (wrapL a) (prettyPrintSentence b)
     | Biconditional (a, b) ->
         sprintf "%s ↔ %s" (prettyPrintSentence a) (prettyPrintSentence b)
+
+
+// Print knowlegde with ranks
+let prettyPrintKnowledge (k: Knowledge) : string =
+    k
+    |> List.sortBy (fun rs -> rs.Rank)
+    |> List.map (fun rs -> sprintf "Rank %.2f: %s" rs.Rank (prettyPrintSentence rs.Sentence))
+    |> String.concat "\n"

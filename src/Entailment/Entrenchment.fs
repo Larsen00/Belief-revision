@@ -14,8 +14,10 @@ let extractRankedSentence (k: Knowledge) (p: sentence) : RankedSentence option =
     | Some rs -> Some rs
     | None -> None
 
+
 let KnowledgeToBeliefBase (e: Knowledge) : bbase =
-    List.map (fun rs -> rs.Sentence) e
+    List.sortBy (fun rs -> rs.Rank) e |> List.map (fun rs -> rs.Sentence)
+
 
 let isTautology (p: sentence) : bool =
     [] |= p
@@ -88,7 +90,10 @@ let rankof (e: Knowledge) (p: sentence) : float =
         let weakestOfAll = List.minBy (fun rs -> rs.Rank) e
 
         match weakestPthatEntailsQ, strongestQthatEntailsP with
-        | None, None -> -0.5 // will give it the strongest rank, but not tautological
+        | None, None -> 
+            match not (KnowledgeToBeliefBase e |= p) with
+            | true -> weakestOfAll.Rank - 1.0
+            | false -> 0.5
         | Some q, None ->
             let below = strongestRankBelowRank e q.Rank
             below + abs(below - q.Rank) / 2.0
@@ -125,7 +130,9 @@ let expansion (e: Knowledge) (p: sentence) : Knowledge =
         { Sentence = p; Rank = newRank } :: e |> updateRanksToInts
 
 let beliefBaseToKnowledge (b: bbase) : Knowledge =
-    List.fold expansion [] b
+    // add all tautologies first 
+    let tautologies, nonTautologies = List.partition (fun p -> isTautology p) b
+    List.fold expansion [] (tautologies @ nonTautologies)
 
 let contraction (e: Knowledge) (s: sentence) : Knowledge =
 
@@ -136,7 +143,7 @@ let contraction (e: Knowledge) (s: sentence) : Knowledge =
         rankP <= rankQ // lower rank means less entrenched; 0 is strongest
 
     let (<.) p q =
-        printfn "\n\nComparing: %A < %A" p q
+        // printfn "\n\nComparing: %A < %A" p q
         p <=. q && not (q <=. p)
 
     // q in K ÷ s iff q in K and either s < (s ∨ q) or s in Cn(Ø)
