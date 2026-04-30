@@ -19,7 +19,7 @@ The console app lets you interact with a belief base and test:
 From the repository root, run:
 
 ```powershell
-dotnet run --project src\BeliefRevision\BeliefRevision.fsproj
+dotnet run --project ./src/BeliefRevision/BeliefRevision.fsproj
 ```
 
 You will then enter the interactive prompt:
@@ -39,9 +39,10 @@ B>
 | `revise <formula>` | Revise the belief base by a formula |
 | `entails <formula>` | Check whether the current belief base entails a formula |
 | `sort` | Show the belief base sorted by epistemic entrenchment |
+| `ranks` | Show each formula together with its epistemic rank |
 | `reset` | Clear the belief base |
 | `demo` | Run the built-in demonstration of the four stages |
-| `help` | Show command help in the terminal |
+| `help` or `?` | Show command help in the terminal |
 | `exit` or `quit` | Exit the program |
 
 ## Formula Syntax
@@ -54,9 +55,11 @@ The parser supports standard propositional logic syntax:
 | `!p`, `~p`, `¬p` | Negation |
 | `p & q`, `p ∧ q` | Conjunction |
 | `p | q`, `p ∨ q` | Disjunction |
-| `p -> q`, `p → q` | Implication |
+| `p -> q`, `p → q` | Implication, right-associative |
 | `p <-> q`, `p ↔ q` | Biconditional |
 | `(p | q) & r` | Parenthesized expressions |
+
+Atom names may contain letters, digits, and underscores after the first character, for example `rain_today` or `p2`.
 
 ## Example Session
 
@@ -64,6 +67,7 @@ The parser supports standard propositional logic syntax:
 B> add p -> q
 B> add p
 B> entails q
+B> ranks
 B> revise p <-> q
 B> show
 B> exit
@@ -82,5 +86,11 @@ B> demo
 To run the test suite:
 
 ```powershell
-dotnet test tests\Entailment.Tests\Entailment.Tests.fsproj
+dotnet test ./tests/Entailment.Tests/Entailment.Tests.fsproj
+```
+
+To run only the belief-revision focused tests:
+
+```powershell
+dotnet test ./tests/Entailment.Tests/Entailment.Tests.fsproj --filter FullyQualifiedName~BelifTests
 ```

@@ -18,11 +18,13 @@ let private coloredLn color text = colored color text; printfn ""
 
 let private line () = printfn "%s" (String.replicate 62 "─")
 
-let private printKb (kb: bbase) =
-    if List.isEmpty kb then
+// Display a Knowledge base; KnowledgeToBeliefBase returns sentences sorted by rank (weakest first)
+let private printKb (k: Knowledge) =
+    if List.isEmpty k then
         coloredLn ConsoleColor.DarkGray "  (empty)"
     else
-        kb |> List.iteri (fun i s ->
+        KnowledgeToBeliefBase k
+        |> List.iteri (fun i s ->
             colored ConsoleColor.DarkGray (sprintf "  [%d] " (i + 1))
             coloredLn ConsoleColor.White (pp s))
 
@@ -38,6 +40,7 @@ let private showHelp () =
     printfn "  revise <φ>           Revision:    B * φ  (Levi identity)"
     printfn "  entails <φ>          Check whether B ⊨ φ"
     printfn "  sort                 Show belief base sorted by entrenchment"
+    printfn "  ranks                Show each formula with its epistemic rank"
     printfn "  reset                Clear the belief base"
     printfn "  demo                 Run demonstration of all four stages"
     printfn "  help                 Show this message"
@@ -61,18 +64,19 @@ let private runDemo () =
         colored ConsoleColor.Cyan (sprintf "── Stage %d: " n)
         coloredLn ConsoleColor.Yellow title
 
-    let showKb (kb: bbase) =
+    let showKb (k: Knowledge) =
         colored ConsoleColor.DarkGray "  Belief base B = {"
-        if List.isEmpty kb then
+        let sentences = KnowledgeToBeliefBase k
+        if List.isEmpty sentences then
             colored ConsoleColor.DarkGray " (empty)"
         else
-            kb |> List.iteri (fun i s ->
+            sentences |> List.iteri (fun i s ->
                 if i > 0 then colored ConsoleColor.DarkGray ",  "
                 colored ConsoleColor.White (pp s))
         coloredLn ConsoleColor.DarkGray " }"
 
-    let checkKb (kb: bbase) (phi: sentence) =
-        let result = checkEntailment (kb, phi)
+    let checkKb (k: Knowledge) (phi: sentence) =
+        let result = isBelieved k phi
         colored ConsoleColor.DarkGray "  B ⊨ "
         colored ConsoleColor.White (pp phi)
         colored ConsoleColor.DarkGray "  →  "
@@ -91,7 +95,7 @@ let private runDemo () =
     // ── Stage 1: Belief Base Design ──────────────────────────────────────────
     step 1 "Belief Base Design"
     printfn "  We design a belief base B over propositions r, w, s."
-    let kb0 : bbase = []
+    let kb0 : Knowledge = []
     printfn "  Initially B is empty."
     showKb kb0
 
@@ -111,15 +115,15 @@ let private runDemo () =
 
     colored ConsoleColor.DarkGray "  add "
     coloredLn ConsoleColor.White (sprintf "%s   (if raining, ground is wet)" (pp f1))
-    let kb1 = expansion kb0 f1
+    let kb1 = Entrenchment.expansion kb0 f1
 
     colored ConsoleColor.DarkGray "  add "
     coloredLn ConsoleColor.White (sprintf "%s   (if wet, ground is slippery)" (pp f2))
-    let kb2 = expansion kb1 f2
+    let kb2 = Entrenchment.expansion kb1 f2
 
     colored ConsoleColor.DarkGray "  add "
     coloredLn ConsoleColor.White (sprintf "%s         (it is raining)" (pp f3))
-    let kb3 = expansion kb2 f3
+    let kb3 = Entrenchment.expansion kb2 f3
 
     showKb kb3
     printfn ""
@@ -132,7 +136,7 @@ let private runDemo () =
     step 4 "Contraction  (B ─ φ)"
     printfn "  Contracting by r (it is no longer certain that it is raining)."
     printfn "  Epistemic entrenchment: beliefs with weaker support are removed first."
-    let kb4 = contraction kb3 (Term "r")
+    let kb4 = Entrenchment.contraction kb3 (Term "r")
     showKb kb4
     printfn ""
     printfn "  Entailment after contraction by r:"
@@ -150,7 +154,7 @@ let private runDemo () =
     colored ConsoleColor.DarkGray (sprintf "  Revising B = %s" "{r → w, w → s, r}")
     colored ConsoleColor.DarkGray "  with  "
     coloredLn ConsoleColor.White (pp notR)
-    let kb5 = revision kb3 notR
+    let kb5 = Entrenchment.revision kb3 notR
     showKb kb5
     printfn ""
     printfn "  Entailment after revision with ¬r:"
@@ -166,13 +170,13 @@ let private runDemo () =
 
 // ── Command processing ────────────────────────────────────────────────────────
 
-/// Returns the new belief base (or the same one on error / display commands).
-let private processCommand (kb: bbase) (line: string) : bbase =
-    let line = line.Trim()
-    if line = "" then kb
+/// Returns the updated Knowledge base (or the same one on error / display commands).
+let private processCommand (kb: Knowledge) (input: string) : Knowledge =
+    let input = input.Trim()
+    if input = "" then kb
     else
 
-    let parts = line.Split([|' '|], 2, StringSplitOptions.RemoveEmptyEntries)
+    let parts = input.Split([|' '|], 2, StringSplitOptions.RemoveEmptyEntries)
     let cmd   = parts.[0].ToLowerInvariant()
     let rest  = if parts.Length > 1 then parts.[1].Trim() else ""
 
@@ -182,7 +186,7 @@ let private processCommand (kb: bbase) (line: string) : bbase =
             None
         else
             match parse rest with
-            | Ok phi   -> Some phi
+            | Ok phi    -> Some phi
             | Error msg ->
                 coloredLn ConsoleColor.Red (sprintf "  Parse error: %s" msg)
                 None
@@ -199,7 +203,7 @@ let private processCommand (kb: bbase) (line: string) : bbase =
         match requireFormula () with
         | None     -> kb
         | Some phi ->
-            let kb' = expansion kb phi
+            let kb' = Entrenchment.expansion kb phi
             colored ConsoleColor.Green "  Expansion  B + "
             coloredLn ConsoleColor.White (pp phi)
             colored ConsoleColor.Cyan "  New belief base:  "
@@ -211,7 +215,7 @@ let private processCommand (kb: bbase) (line: string) : bbase =
         match requireFormula () with
         | None     -> kb
         | Some phi ->
-            let kb' = contraction kb phi
+            let kb' = Entrenchment.contraction kb phi
             colored ConsoleColor.Green "  Contraction  B ─ "
             coloredLn ConsoleColor.White (pp phi)
             colored ConsoleColor.Cyan "  New belief base:  "
@@ -223,7 +227,7 @@ let private processCommand (kb: bbase) (line: string) : bbase =
         match requireFormula () with
         | None     -> kb
         | Some phi ->
-            let kb' = revision kb phi
+            let kb' = Entrenchment.revision kb phi
             colored ConsoleColor.Green "  Revision  B * "
             coloredLn ConsoleColor.White (pp phi)
             coloredLn ConsoleColor.DarkGray (sprintf "  (Levi: contracted by ¬%s, then added %s)" (pp phi) (pp phi))
@@ -236,20 +240,36 @@ let private processCommand (kb: bbase) (line: string) : bbase =
         match requireFormula () with
         | None     -> kb
         | Some phi ->
-            let result = checkEntailment (kb, phi)
             colored ConsoleColor.DarkGray "  B ⊨ "
             colored ConsoleColor.White (pp phi)
             colored ConsoleColor.DarkGray "  →  "
-            if result then coloredLn ConsoleColor.Green "YES ✓"
-            else            coloredLn ConsoleColor.Red   "NO  ✗"
+            if isBelieved kb phi then coloredLn ConsoleColor.Green "YES ✓"
+            else                       coloredLn ConsoleColor.Red   "NO  ✗"
             kb
 
     | "sort" ->
-        let sorted = sortBeliefBase kb
+        // KnowledgeToBeliefBase already returns sentences sorted weakest first
         printfn ""
         coloredLn ConsoleColor.Cyan "  Belief base sorted by epistemic entrenchment (weakest first):"
-        printKb sorted
-        coloredLn ConsoleColor.DarkGray "  (Ordering: p ≤ q iff {p} ⊨ q)"
+        printKb kb
+        coloredLn ConsoleColor.DarkGray "  (Ordering: lower rank = weaker belief)"
+        kb
+
+    | "ranks" ->
+        printfn ""
+        coloredLn ConsoleColor.Cyan "  Belief base with epistemic ranks:"
+        if List.isEmpty kb then
+            coloredLn ConsoleColor.DarkGray "  (empty)"
+        else
+            // Sort weakest first (ascending rank, i.e. most negative first)
+            kb
+            |> List.sortBy (fun rs -> rs.Rank)
+            |> List.iteri (fun i rs ->
+                colored ConsoleColor.DarkGray (sprintf "  [%d] " (i + 1))
+                colored ConsoleColor.White (sprintf "%-30s" (pp rs.Sentence))
+                colored ConsoleColor.DarkGray "  rank = "
+                coloredLn ConsoleColor.Yellow (sprintf "%g" rs.Rank))
+        coloredLn ConsoleColor.DarkGray "  (rank 0 = most entrenched; more negative = weaker)"
         kb
 
     | "cnf" ->
@@ -258,7 +278,8 @@ let private processCommand (kb: bbase) (line: string) : bbase =
         if List.isEmpty kb then
             coloredLn ConsoleColor.DarkGray "  (empty)"
         else
-            kb |> List.iteri (fun i s ->
+            KnowledgeToBeliefBase kb
+            |> List.iteri (fun i s ->
                 let cnfStr = s |> toCNF |> prittyPrint
                 colored ConsoleColor.DarkGray (sprintf "  [%d] " (i + 1))
                 colored ConsoleColor.DarkGray (sprintf "%s  →  " (pp s))
@@ -292,6 +313,8 @@ let private processCommand (kb: bbase) (line: string) : bbase =
 
 [<EntryPoint>]
 let main _ =
+    Console.OutputEncoding <- System.Text.Encoding.UTF8
+
     printfn ""
     line ()
     coloredLn ConsoleColor.Cyan "  BELIEF REVISION AGENT"
@@ -302,12 +325,12 @@ let main _ =
     printfn "    Expansion    B + φ    — add a new belief"
     printfn "    Contraction  B ─ φ    — remove a belief (entrenchment-based)"
     printfn "    Revision     B * φ    — revise via Levi identity: (B ─ ¬φ) + φ"
-    printfn "    Entailment   B ⊨ φ    — resolution-based entailment check"
+    printfn "    Entailment   B ⊨ φ    — entailment check via epistemic entrenchment"
     printfn ""
     coloredLn ConsoleColor.DarkGray "  Type 'demo' to see a worked example, or 'help' for all commands."
     printfn ""
 
-    let mutable kb : bbase = []
+    let mutable kb : Knowledge = []
 
     let rec loop () =
         colored ConsoleColor.Cyan "B> "
