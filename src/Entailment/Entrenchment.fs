@@ -67,7 +67,7 @@ let updateRanksToInts (e: Knowledge) : Knowledge =
     let tautologies, nonTautologies = extractTautologies e
 
     let sortedNonTautologies =
-        nonTautologies |> List.sortBy (fun rs -> rs.Rank)
+        nonTautologies |> List.sortByDescending (fun rs -> rs.Rank)
 
     tautologies @ updateNonTautologies sortedNonTautologies -1.0
 
@@ -149,6 +149,5 @@ let contraction (e: Knowledge) (s: sentence) : Knowledge =
 
 
 // Revision using the Levi identity: B * ϕ = (B - ¬ϕ) + ϕ
-let revision (b:bbase) p =
-    let k = beliefBaseToKnowledge b
-    expansion (contraction k (Not p)) p
+let revision (kb:Knowledge) p =
+    expansion (contraction kb (Not p)) p

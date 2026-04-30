@@ -10,7 +10,6 @@
     <Compile Include="ToCnf.fs" />
     <Compile Include="Resolution.fs" />
     <Compile Include="Entailment.fs" />
-    <Compile Include="Belif.fs" />
     <Compile Include="Entrenchment.fs" />
     <Compile Include="PrettyPrint.fs" />
   </ItemGroup>

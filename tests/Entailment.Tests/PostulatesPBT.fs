@@ -93,7 +93,7 @@ let ``Vacuity postulate`` () =
 //  Consistency: B ∗ ϕ is consistent if ϕ is consistent.
 let consistency (B: bbase) (phi: sentence) =
     if isConsistentSentence phi then
-        Entrenchment.revision B phi |> KnowledgeToBeliefBase |> isConsistent |> Some
+        Entrenchment.revision (beliefBaseToKnowledge B) phi |> KnowledgeToBeliefBase |> isConsistent |> Some
     else
         None
 
@@ -119,8 +119,8 @@ let extensionality (s:BiconditionalTautology) (B: bbase) =
     match Entailment.isTautology s_new with
     | false -> failwith "Generator failed to produce tautology"
     | true -> 
-        let revisedPhi = Entrenchment.revision B phi |> KnowledgeToBeliefBase
-        let revisedPsi = Entrenchment.revision B psi |> KnowledgeToBeliefBase
+        let revisedPhi = Entrenchment.revision (beliefBaseToKnowledge B) phi |> KnowledgeToBeliefBase
+        let revisedPsi = Entrenchment.revision (beliefBaseToKnowledge B) psi |> KnowledgeToBeliefBase
 
         // Extensionality is about equality of the resulting belief sets, not syntax.
         // Mutual entailment of the revised bases is the relevant check here.

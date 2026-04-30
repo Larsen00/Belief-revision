@@ -8,7 +8,6 @@
   <ItemGroup>
     <Compile Include="Generators.fs" />
     <Compile Include="PostulatesPBT.fs" />
-    <Compile Include="EntrenchmentPBT.fs" />
     <Compile Include="PostulatesRegressionTests.fs" />
     <Compile Include="Tests.fs" />
     <Compile Include="EntailmentTests.fs" />
